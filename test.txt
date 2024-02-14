@@ -1,0 +1,19 @@
+
+
+Using moderm UI
+from customtkinter import *
+
+app = CTk()
+app.geometry("500x550")
+app.title("Image Analyzer")
+
+
+def button_callback():
+    print("Button pressed")
+
+btn = CTkButton(master=app, text="Load Images", command=button_callback)
+btn.grid(row=0, column=0, padx=5, pady=5)
+
+
+
+app.mainloop()
