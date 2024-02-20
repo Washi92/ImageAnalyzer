@@ -201,6 +201,8 @@ class ImageApp:
 
             # Activate other functionalitites
             self.draw_curve_switch.configure(state="normal")
+            self.create_marker_btn.configure(state="disabled")
+            self.remove_marker_btn.configure(state="disabled")
 
     def draw_curve_switcher(self):
         if self.draw_curve_switch_var.get() == "on":
@@ -228,6 +230,9 @@ class ImageApp:
             for p in self.c_points:
                 self.canvas_right.delete(p)
             self.c_points = []
+
+            # Clear points before drawing new curved lines
+            self.points.clear()
 
             # Remove the curved lines from the canvas
             for l in self.c_lines:
