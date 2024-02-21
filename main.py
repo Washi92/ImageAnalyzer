@@ -37,6 +37,7 @@ class ImageApp:
         x_position = (screen_width - SCREEN_WIDTH) // 2
         y_position = (screen_height - SCREEN_HEIGHT) // 2
         self.master.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+{x_position}+{y_position}")
+        print(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+{x_position}+{y_position}")
 
         self.master.resizable(False,False)
 
@@ -59,13 +60,13 @@ class ImageApp:
         ############################################## FRAMES & CANVAS ##############################################
         # Create main frames to split the screen in left and right side sides
         left_frame = customtkinter.CTkFrame(master=self.master)
-        left_frame.pack(side="left", anchor="nw")
+        left_frame.pack(side="left", anchor="nw",fill="y", expand=True)
         right_frame = customtkinter.CTkFrame(master=self.master)
-        right_frame.pack(side="right")
+        right_frame.pack(side="right",fill="y", expand=True)
 
         # Frames to display the loaded images
         self.left_up_frame = customtkinter.CTkFrame(master=left_frame)
-        self.left_up_frame.pack(side="top", fill="y", expand=True, anchor="nw")
+        self.left_up_frame.pack(side="top", fill="both", expand=True, anchor="nw")
         self.left_down_frame = customtkinter.CTkFrame(master=left_frame, width=LEFT_FRAMES_WIDTH,
                                                  height=SCREEN_HEIGHT - TOP_FRAMES_HEIGHT)
         self.left_down_frame.pack(side="bottom", anchor="nw")
@@ -76,7 +77,7 @@ class ImageApp:
         # Frames to analyze the image
         self.right_up_frame = customtkinter.CTkFrame(master=right_frame, width=SCREEN_WIDTH - LEFT_FRAMES_WIDTH,
                                                 height=TOP_FRAMES_HEIGHT)
-        self.right_up_frame.pack(side="top", anchor="nw")
+        self.right_up_frame.pack(side="top", anchor="center", expand=True)
 
         self.right_down_frame = customtkinter.CTkFrame(master=right_frame, border_color="blue",
                                                        width=SCREEN_WIDTH - LEFT_FRAMES_WIDTH,
@@ -86,15 +87,15 @@ class ImageApp:
         # Canvas for displaying the loaded images and configure the scrollbar
         self.canvas_left = customtkinter.CTkCanvas(self.left_up_frame, width=LEFT_FRAMES_WIDTH,
                                                    height=TOP_FRAMES_HEIGHT, background="dark gray")
-        self.canvas_left.pack()
+        self.canvas_left.pack(fill="both", expand=True)
         self.canvas_left.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.configure(command=self.canvas_left.yview)
 
         # Canvas for displaying the selected image to analyze
-        self.canvas_right = tk.Canvas(self.right_up_frame, background="dark gray",
+        self.canvas_right = tk.Canvas(self.right_up_frame,
                                                     width=SCREEN_WIDTH - LEFT_FRAMES_WIDTH,
                                                     height=TOP_FRAMES_HEIGHT)  # bd=0, highlightthickness=0
-        self.canvas_right.pack()
+        self.canvas_right.pack( expand=True, fill="both")
 
         ############################################## TEXT INPUT ##############################################
         self.search_entry = customtkinter.CTkEntry(self.left_down_frame, placeholder_text="Search image", width=250)
@@ -398,9 +399,10 @@ class ImageApp:
                                    command=lambda i=i: self.display_main_image(i))
 
                 self.canvas_left.create_window(LIST_IMG_SPACING, y_position, anchor=tk.NW, window=btn_img)
-
+                imgname=img["image_name"]
+                imgsize=img["image_size"]
                 # Display image info to the right of the image
-                info_text = f"Name: {img["image_name"]}\nDimensions: {img["image_size"][0]}x{img["image_size"][1]}"
+                info_text = f"Name: {imgname}\nDimensions: {imgsize[0]}x{imgsize[1]}"
                 info_label = tk.Label(self.canvas_left, text=info_text, anchor=tk.W, justify=tk.LEFT)
                 self.canvas_left.create_window(LIST_IMG_SPACING + RESIZE_IMG_WIDTH + LIST_IMG_SPACING,
                                                y_position, anchor=tk.NW, width=210, window=info_label)
@@ -477,16 +479,20 @@ class ImageApp:
 
         if aspect_ratio >= 1:  # Width is greater than or equal to height
             if aspect_ratio >= RIGHT_FRAMES_WIDTH / TOP_FRAMES_HEIGHT:
+                print("Resizing1")
                 right_img_resized_width = RIGHT_FRAMES_WIDTH
                 right_img_resized_height = int(RIGHT_FRAMES_WIDTH / aspect_ratio)
 
             else:
+                print("Resizing2")
                 right_img_resized_height = TOP_FRAMES_HEIGHT
                 right_img_resized_width = int(TOP_FRAMES_HEIGHT * aspect_ratio)
 
 
         else:  # Height is greater than width
+            print("Resizing3")
             right_img_resized_height = TOP_FRAMES_HEIGHT
+            print(right_img_resized_height)
             right_img_resized_width = int(TOP_FRAMES_HEIGHT * aspect_ratio)
 
         right_img_resized = loaded_img.resize((right_img_resized_width, right_img_resized_height),
