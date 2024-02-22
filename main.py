@@ -37,7 +37,6 @@ class ImageApp:
         x_position = (screen_width - SCREEN_WIDTH) // 2
         y_position = (screen_height - SCREEN_HEIGHT) // 2
         self.master.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+{x_position}+{y_position}")
-        print(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}+{x_position}+{y_position}")
 
         self.master.resizable(False,False)
 
@@ -479,20 +478,16 @@ class ImageApp:
 
         if aspect_ratio >= 1:  # Width is greater than or equal to height
             if aspect_ratio >= RIGHT_FRAMES_WIDTH / TOP_FRAMES_HEIGHT:
-                print("Resizing1")
                 right_img_resized_width = RIGHT_FRAMES_WIDTH
                 right_img_resized_height = int(RIGHT_FRAMES_WIDTH / aspect_ratio)
 
             else:
-                print("Resizing2")
                 right_img_resized_height = TOP_FRAMES_HEIGHT
                 right_img_resized_width = int(TOP_FRAMES_HEIGHT * aspect_ratio)
 
 
         else:  # Height is greater than width
-            print("Resizing3")
             right_img_resized_height = TOP_FRAMES_HEIGHT
-            print(right_img_resized_height)
             right_img_resized_width = int(TOP_FRAMES_HEIGHT * aspect_ratio)
 
         right_img_resized = loaded_img.resize((right_img_resized_width, right_img_resized_height),
